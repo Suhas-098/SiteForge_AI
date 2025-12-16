@@ -4,6 +4,7 @@ import heroDots from "../assets/hero-section-dot-image.png";
 import heroCard from "../assets/hero-section-card-image.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Footer from "../components/footer";
 
 
 const HomePage = () => {
@@ -57,6 +58,7 @@ const HomePage = () => {
                 </div>
                 <img className="w-full max-w-xl mt-16 drop-shadow-2xl drop-shadow-blue-500/15 mx-auto rounded-lg" src={heroCard} alt="Hero Section Card Image" width={1000} height={500} fetchPriority="high" />
             </div>
+            <Footer />
         </>
     )
 }

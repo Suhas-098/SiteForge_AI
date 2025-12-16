@@ -2,11 +2,14 @@ import Navbar from '../components/Navbar';
 import { SparklesIcon } from "lucide-react";
 import { PricingData } from '../components/pricing/PricingData';
 import SectionTitle from '../components/pricing/SectionTitle';
+import { useState } from 'react';
 
 
 
 
 const PricingPage = () => {
+    const [selectedPlan, setSelectedPlan] = useState<string | null>("Pro Plan");
+
     return (
         <>
             <Navbar />
@@ -14,7 +17,14 @@ const PricingPage = () => {
 
             <div className="flex flex-wrap items-center justify-center gap-6 mt-16">
                 {PricingData.map((plan, index) => (
-                    <div key={index} className={`p-6 rounded-2xl max-w-75 w-full shadow-[0px_4px_26px] shadow-black/6 ${plan.mostPopular ? "relative pt-12 bg-gradient-to-b from-indigo-600 to-violet-600" : "bg-white"}`}>
+                    <div
+                        key={index}
+                        onClick={() => setSelectedPlan(plan.title)}
+                        className={`cursor-pointer transition-all duration-300 p-6 rounded-2xl max-w-75 w-full shadow-[0px_4px_26px] shadow-black/6 relative border-2 ${selectedPlan === plan.title
+                            ? "border-indigo-600 ring-4 ring-indigo-100 scale-105 z-10"
+                            : "border-transparent hover:border-gray-200"
+                            } ${plan.mostPopular ? "bg-gradient-to-b from-indigo-600 to-violet-600" : "bg-white"}`}
+                    >
                         {plan.mostPopular && (
                             <div className="flex items-center text-xs gap-1 py-1.5 px-2 text-indigo-600 absolute top-4 right-4 rounded bg-white font-medium">
                                 <SparklesIcon size={14} />
@@ -32,8 +42,13 @@ const PricingPage = () => {
                                 </div>
                             ))}
                         </div>
-                        <button className={`transition w-full py-3 rounded-lg font-medium mt-8 ${plan.mostPopular ? "bg-white hover:bg-slate-100 text-slate-800" : "bg-indigo-600 hover:bg-indigo-700 text-white"}`}>
-                            <span>{plan.buttonText}</span>
+                        <button className={`transition w-full py-3 rounded-lg font-medium mt-8 ${plan.mostPopular
+                            ? "bg-white hover:bg-slate-100 text-slate-800"
+                            : selectedPlan === plan.title
+                                ? "bg-indigo-600 text-white"
+                                : "bg-indigo-600 hover:bg-indigo-700 text-white"
+                            }`}>
+                            <span>{selectedPlan === plan.title ? "Selected" : plan.buttonText}</span>
                         </button>
                     </div>
                 ))}
