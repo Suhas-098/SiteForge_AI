@@ -1,10 +1,10 @@
 import { ChevronRightIcon, SparklesIcon, Loader2 } from "lucide-react";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/sections/Navbar";
 import heroDots from "../assets/hero-section-dot-image.png";
 import heroCard from "../assets/hero-section-card-image.svg";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../components/footer";
+import Footer from "../components/sections/footer";
 
 
 const HomePage = () => {
