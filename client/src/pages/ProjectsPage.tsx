@@ -1,8 +1,15 @@
-import React from 'react'
+import { SignedIn, SignedOut, RedirectToSignIn } from "@clerk/clerk-react";
 
 const ProjectsPage = () => {
     return (
-        <div>ProjectsPage</div>
+        <>
+            <SignedIn>
+                <div>ProjectsPage</div>
+            </SignedIn>
+            <SignedOut>
+                <RedirectToSignIn />
+            </SignedOut>
+        </>
     )
 }
 

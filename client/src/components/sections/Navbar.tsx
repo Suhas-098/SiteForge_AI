@@ -1,9 +1,10 @@
 import { Link, NavLink } from "react-router-dom";
-import { navLinks } from "../components/navbar_data/navLinks";
-import logo from "../assets/logo.svg";
+import { navLinks } from "../navbar_data/navLinks";
+import logo from "../../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { SignOutButton, SignedIn } from "@clerk/clerk-react";
 
 export default function Navbar() {
 
@@ -60,6 +61,12 @@ export default function Navbar() {
                     >
                         {loading ? <Loader2 className="animate-spin" size={20} /> : "Get Started"}
                     </button>
+                    {/* When user is signed IN */}
+                    <SignedIn>
+                        <SignOutButton>
+                            <button>Logout</button>
+                        </SignOutButton>
+                    </SignedIn>
                 </div>
             </div>
         </nav>
