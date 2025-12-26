@@ -9,10 +9,12 @@ import CommuntiyPage from './pages/CommuntiyPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import ProtectedRoute from './components/middleware/ProtectedRoutes';
+import SyncUser from './components/SyncUser';
 
 const App = () => {
   return (
     <>
+      <SyncUser />
       <div>
         <Routes>
           //public Routes

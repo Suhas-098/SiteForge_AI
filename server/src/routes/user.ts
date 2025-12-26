@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { requireAuth } from "@clerk/express";
+import { clerkClient, requireAuth } from "@clerk/express";
 import prisma from "../lib/prisma.js";
 
 const router = Router();
@@ -8,17 +8,25 @@ const router = Router();
  * Sync Clerk user with database
  */
 router.post("/sync", requireAuth(), async (req, res) => {
-    const clerkId = req.auth.userId;
+    try {
+        const clerkId = req.auth.userId;
 
-    let user = await prisma.user.findUnique({
-        where: { clerkId },
-    });
+        const clerkUser = await clerkClient.users.getUser(clerkId);
 
-    if (!user) {
-        const { email, name } = req.body;
+        const email = clerkUser.emailAddresses[0]?.emailAddress;
+        const name =
+            clerkUser.firstName ||
+            clerkUser.username ||
+            "User";
 
-        user = await prisma.user.create({
-            data: {
+        if (!email) {
+            return res.status(400).json({ error: "Email not found in Clerk" });
+        }
+
+        const user = await prisma.user.upsert({
+            where: { clerkId },
+            update: {},
+            create: {
                 clerkId,
                 email,
                 name,
@@ -26,9 +34,12 @@ router.post("/sync", requireAuth(), async (req, res) => {
                 totalCreation: 0,
             },
         });
-    }
 
-    return res.json(user);
+        return res.json(user);
+    } catch (err: any) {
+        console.error("❌ SYNC ERROR:", err);
+        return res.status(500).json({ error: err.message });
+    }
 });
 
 /**
