@@ -4,7 +4,7 @@ import logo from "../../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
-import { SignOutButton, SignedIn } from "@clerk/clerk-react";
+import { SignOutButton, SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 
 export default function Navbar() {
 
@@ -48,12 +48,15 @@ export default function Navbar() {
 
                 {/* Action Buttons */}
                 <div className="flex items-center gap-4">
-                    <button
-                        onClick={() => navigate('/sign-in')}
-                        disabled={loading}
-                        className="hover:bg-slate-100 transition px-4 py-2 border border-indigo-600 rounded-md">
-                        Sign in
-                    </button>
+                    <SignedOut>
+                        <SignInButton>
+                            <button
+                                disabled={loading}
+                                className="hover:bg-slate-100 transition px-4 py-2 border border-indigo-600 rounded-md">
+                                Sign in
+                            </button>
+                        </SignInButton>
+                    </SignedOut>
                     <button
                         onClick={handleGenerate}
                         disabled={loading}
@@ -64,7 +67,11 @@ export default function Navbar() {
                     {/* When user is signed IN */}
                     <SignedIn>
                         <SignOutButton>
-                            <button>Logout</button>
+                            <button
+                                disabled={loading}
+                                className="hover:bg-slate-100 transition px-4 py-2 border border-indigo-600 rounded-md">
+                                Logout
+                            </button>
                         </SignOutButton>
                     </SignedIn>
                 </div>

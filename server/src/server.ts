@@ -1,38 +1,48 @@
 import express from "express";
 import type { Request, Response } from "express";
-import cors from "cors";
 import dotenv from "dotenv";
-import { clerkMiddleware, requireAuth } from "@clerk/express";
+import { clerkMiddleware } from "@clerk/express";
 import router from "./routes/user.js";
-
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 dotenv.config();
 
 const app = express();
 
-app.use(cors({
-    credentials: true,
-    origin: process.env.CLIENT_URL
-}));
+/* ------------------- utils ------------------- */
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+/* ------------------- middlewares ------------------- */
 app.use(express.json());
 
-// ✅ Clerk middleware 
-app.use(clerkMiddleware());
+// Clerk middleware 
+app.use(
+    clerkMiddleware({
+        publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+        secretKey: process.env.CLERK_SECRET_KEY,
+    })
+);
 
-
+/* ------------------- API routes ------------------- */
 app.use("/api/user", router);
 
+/* ------------------- Frontend (Vite build) ------------------- */
+app.use(express.static(path.join(__dirname, "../client/dist")));
 
-
-const PORT = process.env.PORT || 3000
-
-app.get('/', (req: Request, res: Response) => {
-    res.send("Hello Welcome to SiteForge!")
+// SPA fallback (MUST be after API routes)
+app.get("*", (req: Request, res: Response) => {
+    res.sendFile(
+        path.join(__dirname, "../../client/dist/index.html")
+    );
 });
 
+/* ------------------- server ------------------- */
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-    console.log(`server is alive and running on http://localhost:${PORT}`)
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
 });
 
 export default app;
